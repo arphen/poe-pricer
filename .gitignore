@@ -1,0 +1,18 @@
+# Secrets: never publish the session cookie or local configuration
+.env
+.env.*
+!.env.example
+
+# Personal stash/pricing history and downloaded filters
+data/
+filters/
+
+# Caches: trade static data, RePoE data, fetched tabs, prices, rates
+.cache/
+
+# Tooling / OS noise
+node_modules/
+.claude/settings.local.json
+.DS_Store
+*.log
+npm-debug.log*

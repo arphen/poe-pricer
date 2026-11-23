@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoE Pricer · Search</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  main.search { display:grid; grid-template-columns:minmax(380px, 500px) minmax(0, 1fr); gap:16px; padding:12px 16px 24px; align-items:start; }
+  @media (max-width: 1000px) { main.search { grid-template-columns:1fr; } #form { position:static; max-height:none; } }
+  #budget { font-variant-numeric:tabular-nums; font-size:13px; }
+  #budget .wait { color:var(--warn); }
+  #budget .low { color:var(--warn); }
+
+  /* form */
+  #form { position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:hidden auto; background:var(--panel); border:1px solid var(--line); border-radius:6px; }
+  .bar { position:sticky; top:0; z-index:3; background:var(--panel); padding:10px 12px; border-bottom:1px solid var(--line); display:grid; gap:8px; }
+  .bar .row { margin:0; gap:8px; }
+  .bar .grow { flex:1 1 0; min-width:0; width:0; }
+  #fbody { padding:10px 12px 14px; display:grid; gap:10px; }
+  .wide { width:100%; }
+  .trio { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; }
+  .trio select { width:100%; }
+  .acwrap { position:relative; display:block; }
+  .ac { position:absolute; left:0; right:0; top:100%; z-index:5; list-style:none; margin:2px 0 0; padding:4px 0; background:var(--raise); border:1px solid var(--line); border-radius:4px; max-height:340px; overflow:auto; box-shadow:0 6px 18px rgb(0 0 0 / .4); }
+  .ac li { padding:4px 10px; cursor:pointer; display:flex; justify-content:space-between; gap:10px; font-size:13px; }
+  .ac li.on { background:var(--line); }
+  .ac small { color:var(--dim); white-space:nowrap; }
+
+  .g { border:1px solid var(--line); border-radius:4px; padding:6px 8px; display:grid; gap:4px; }
+  .ghead { display:flex; gap:6px; align-items:center; }
+  .ghead .grow { flex:1; }
+  .ghead input[type=number] { width:64px; }
+  .srow { display:grid; grid-template-columns:auto minmax(0, 1fr) 60px 60px auto; gap:6px; align-items:center; font-size:13px; }
+  .srow.w { grid-template-columns:auto minmax(0, 1fr) 54px 54px 54px auto; }
+  .srow.opt { grid-template-columns:auto minmax(0, 1fr) 150px auto; }
+  .srow input[type=number] { width:100%; padding:3px 5px; }
+  .srow.off .stext { opacity:.45; text-decoration:line-through; }
+  .srow.flash { animation:flash 1s; }
+  @keyframes flash { from { background:rgb(200 164 92 / .35); } }
+  .stext small { color:var(--dim); margin-left:6px; font-size:11px; }
+  .x { background:none; border:none; color:var(--dim); padding:0 4px; font-size:16px; line-height:1; }
+  .x:hover { color:var(--bad); }
+
+  details.fsec { border-top:1px solid var(--line); padding-top:6px; margin:0; }
+  details.fsec summary { color:var(--dim); font-size:13px; }
+  details.fsec summary b { color:var(--accent); font-weight:600; }
+  .fgrid { display:grid; grid-template-columns:1fr 1fr; gap:4px 14px; margin-top:6px; }
+  .frow { display:flex; gap:4px; align-items:center; min-width:0; }
+  .frow.full { grid-column:1 / -1; }
+  .frow label { flex:1; min-width:0; font-size:13px; color:var(--dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .frow input[type=number] { width:58px; padding:3px 5px; }
+  .frow input.sock { width:38px; }
+  .frow select { max-width:62%; }
+  .frow input[type=text] { width:62%; }
+
+  /* results */
+  #results { min-width:0; }
+  .rhead { display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; margin-bottom:10px; }
+  .rhead .total { font-size:16px; font-weight:600; }
+  .intro { color:var(--dim); max-width:620px; }
+  .intro b { color:var(--fg); }
+  .lst { display:grid; grid-template-columns:52px minmax(0, 1fr) 180px; gap:12px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--panel); margin-bottom:8px; }
+  .lst > img { width:52px; max-height:104px; object-fit:contain; }
+  .nm { font-weight:600; }
+  .meta { color:var(--dim); font-size:12px; }
+  .meta .corrupt { color:var(--bad); }
+  .mods { list-style:none; margin:6px 0 0; padding:0; font-size:13px; }
+  .mods li { padding:1px 4px; margin:0 -4px; border-radius:3px; white-space:pre-line; }
+  .mods li.sep { border-top:1px dashed var(--line); margin:3px 0; padding:0; height:0; }
+  .mods .k-implicit, .mods .k-pseudo { color:var(--dim); }
+  .mods .k-enchant, .mods .k-crafted, .mods .k-scourge { color:var(--craft); }
+  .mods .k-fractured { color:#bfa86a; }
+  .mods li[data-stat] { cursor:pointer; }
+  .mods li[data-stat]:hover { background:var(--raise); }
+  .mods li[data-stat]:hover::after { content:'  + filter'; color:var(--accent); font-size:11px; }
+  .mods li.hit { color:var(--accent); }
+  .tier { display:inline-block; min-width:26px; margin-right:6px; font-size:10px; color:var(--dim); border:1px solid var(--line); border-radius:3px; text-align:center; padding:0 3px; vertical-align:1px; }
+  .px { text-align:right; display:grid; gap:4px; align-content:start; }
+  .amt { font-size:20px; font-weight:700; white-space:nowrap; }
+  .amt small { font-size:13px; font-weight:400; color:var(--dim); margin-left:3px; }
+  .eq { font-size:12px; color:var(--dim); }
+  .seller { font-size:12px; color:var(--dim); overflow-wrap:anywhere; }
+  .dot.on { background:var(--good); } .dot.off { background:var(--line); }
+  .tag { font-size:11px; color:var(--dim); border:1px solid var(--line); border-radius:8px; padding:0 6px; justify-self:end; }
+  .more { width:100%; padding:8px; }
+  .normal { color:var(--fg); } .gem { color:#1ba29b; } .currency, .card { color:#c9bb94; }
+  @media (prefers-reduced-motion: reduce) { .srow.flash { animation:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>PoE Pricer</h1>
+  <a href="/">← Stash</a>
+  <span id="league" class="muted"></span>
+  <span id="budget" class="muted"></span>
+  <nav>
+    <a href="sell.html">Sell</a>
+    <a href="overview.html">Overview</a>
+  </nav>
+</header>
+<main class="search">
+  <form id="form" autocomplete="off">
+    <div class="bar">
+      <div class="row">
+        <button type="submit" class="primary" id="go">Search</button>
+        <select id="sort" title="sort order"><option value="asc">cheapest first</option><option value="desc">priciest first</option></select>
+        <select id="recent" class="grow" title="recent searches"></select>
+        <button type="button" id="clear" title="reset every filter">Clear</button>
+      </div>
+      <input type="text" id="paste" class="wide" placeholder="paste a trade site link (or search id) to open it here">
+    </div>
+    <div id="fbody"><p class="muted">loading the trade site's item and stat lists…</p></div>
+  </form>
+  <section id="results"></section>
+</main>
+<script src="search.js" type="module"></script>
+</body>
+</html>

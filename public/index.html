@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoE Pricer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>PoE Pricer</h1>
+  <span id="who" class="muted"></span>
+  <span class="group">
+    <select id="tabs" title="stash tab"></select>
+    <button id="reload" title="re-read this tab from the game">↻</button>
+  </span>
+  <span class="group">
+    <button id="scanTab" class="primary" title="search trade for every rare and magic item in this tab">Price this tab</button>
+    <button id="scanAll" title="search trade for every dump-type tab">Price all dump tabs</button>
+    <button id="scanStop" hidden>Stop</button>
+  </span>
+  <span id="scan"><span id="strip" hidden></span> <span id="scanNow"></span></span>
+  <nav>
+    <a href="search.html" title="trade search through the rate limiter">Search</a>
+    <a href="sell.html" title="everything worth selling, grouped by price, with stash searches to paste in game">Sell</a>
+    <a href="overview.html" title="learning state: data, affix values">Overview</a>
+    <button id="modelBtn" class="link" title="model guess against the trade price, last searched items: a filled dot landed within ×2, a ring further off">Model<span id="calls"></span></button>
+  </nav>
+</header>
+<div id="errors" hidden></div>
+<main>
+  <section>
+    <div id="summary" class="muted"></div>
+    <div class="toolbar">
+      <span class="seg" id="filters"></span>
+      <label class="muted">worth selling from <input type="number" id="minC" value="10" min="0"> c</label>
+      <button id="regexBtn" title="stash search strings that highlight the items worth selling, to paste in game">Stash search</button>
+    </div>
+    <div id="regexOut"></div>
+    <table id="items">
+      <thead><tr><th></th><th>item</th><th class="num">price</th><th>how it was priced</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="others" class="muted"></p>
+  </section>
+  <aside id="panel"><p class="muted">Select an item to see how it was priced.</p></aside>
+</main>
+<script src="app.js" type="module"></script>
+</body>
+</html>

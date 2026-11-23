@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoE Pricer · Overview</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  #ov { padding:16px; display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); align-items:start; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:12px; }
+  .card h2 { margin:0 0 6px; font-size:15px; color:var(--accent); }
+  .kpis { display:flex; gap:18px; flex-wrap:wrap; } .kpi b { display:block; font-size:20px; }
+  .wide { grid-column:1 / -1; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; } @media (max-width:700px) { .two { grid-template-columns:1fr; } }
+  td.num, th.num { text-align:right; } th { text-align:left; color:var(--dim); font-weight:400; padding:3px 4px; }
+  .up { color:#8c6; font-weight:600; } .down { color:#d77; font-weight:600; }
+  .bar { display:inline-block; height:8px; background:var(--accent); border-radius:2px; vertical-align:middle; }
+  .ok { color:#8c6; } .warn { color:#d8a64a; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PoE Pricer</h1>
+  <a href="/">← Stash</a>
+  <a href="search.html">Search</a>
+  <select id="slot"></select>
+  <button id="retrain">Retrain now</button>
+  <span id="status" class="muted"></span>
+</header>
+<div id="ov"></div>
+<script src="overview.js" type="module"></script>
+</body>
+</html>

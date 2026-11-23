@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoE Pricer · Sell</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  #sell { padding:12px 16px 32px; max-width:1100px; display:grid; gap:12px; }
+  .bar { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  #next { font-size:15px; padding:8px 16px; }
+  #nextInfo b { color:var(--fg); }
+  kbd { border:1px solid var(--line); border-bottom-width:2px; border-radius:3px; padding:0 5px; font:12px ui-monospace, monospace; color:var(--fg); }
+  .warnbox { padding:8px 10px; border:1px solid #6a5530; border-radius:4px; color:var(--warn); font-size:13px; }
+
+  .sg { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:10px 12px; display:grid; gap:8px; }
+  .sg.next { border-color:var(--accent); box-shadow:inset 3px 0 0 var(--accent); }
+  .sg.done { opacity:.45; }
+  .sg-head { display:flex; gap:14px; align-items:baseline; flex-wrap:wrap; }
+  .sg-price { font-size:24px; font-weight:700; color:var(--accent); min-width:90px; }
+  .sg-price small { font-size:12px; font-weight:400; color:var(--dim); margin-left:6px; }
+  .sg-head .grow { flex:1; }
+  .sg-strings { display:flex; gap:6px; flex-wrap:wrap; }
+  .rx { font-family:ui-monospace, monospace; font-size:13px; text-align:left; }
+  .rx.copied { border-color:var(--good); color:var(--dim); }
+  .rx.copied::after { content:'  ✓'; color:var(--good); }
+  .rx.flash { animation:flash .6s; }
+  @keyframes flash { from { background:var(--accent); color:#1a1610; } }
+  .icons { display:flex; gap:4px; flex-wrap:wrap; }
+  .icons img { width:34px; height:34px; object-fit:contain; background:var(--raise); border-radius:3px; }
+  .sg table td { font-size:13px; padding:3px 6px; }
+  .sg td.num { text-align:right; white-space:nowrap; }
+  .warn { color:var(--warn); font-size:12px; }
+  .missing { color:var(--warn); font-size:13px; }
+  .rare { color:var(--rare); } .magic { color:var(--magic); } .unique { color:var(--unique); }
+  h2 { font-size:14px; margin:10px 0 0; color:var(--dim); font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+  @media (prefers-reduced-motion: reduce) { .rx.flash { animation:none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>PoE Pricer</h1>
+  <a href="/">← Stash</a>
+  <a href="search.html">Search</a>
+  <label class="muted">list from <input type="number" id="min" min="1" value="20"> c</label>
+  <span class="seg" id="step"></span>
+  <button id="reload" title="re-read the dump tabs from the game (after moving items around)">↻ re-read stash</button>
+  <span id="status" class="muted"></span>
+</header>
+<div id="sell"></div>
+<script src="sell.js" type="module"></script>
+</body>
+</html>

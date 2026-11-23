@@ -1,0 +1,25 @@
+{
+  "name": "poe-pricer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Path of Exile stash pricer: trade-site comps, a learned price model, and sell lists",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arphen/poe-pricer.git"
+  },
+  "homepage": "https://github.com/arphen/poe-pricer#readme",
+  "bugs": {
+    "url": "https://github.com/arphen/poe-pricer/issues"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --env-file=.env src/server.ts",
+    "test": "node --test test/",
+    "filter": "node --env-file=.env src/lootfilter.ts",
+    "check:secrets": "node scripts/check-secrets.mjs"
+  }
+}
