@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node --env-file=.env src/server.ts",
-    "test": "node --test test/",
+    "test": "node --test test/*.test.ts",
     "filter": "node --env-file=.env src/lootfilter.ts",
     "check:secrets": "node scripts/check-secrets.mjs"
   }
